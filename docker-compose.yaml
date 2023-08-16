@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  app:
+    image: golang:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - go:/go
+    command: go run main.go
+  
+  couchbase:
+    image: couchbase:latest
+    container_name: couch_server
+    volumes:
+      - couchbase:/opt/couchbase/var
+    networks:
+      default:
+          ipv4_address: "172.99.99.2"
+
+    ports:
+      - 8091-8096:8091-8096
+      - 11210-11211:11210-11211
+
+volumes:
+  go: {}
+  couchbase: {}
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.99.99.0/24
